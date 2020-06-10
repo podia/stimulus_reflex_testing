@@ -1,35 +1,0 @@
-
-test/stimulus_reflex_testing_test.rb,227
-class StimulusReflexTestingTest < Minitest::TestStimulusReflexTestingTest3,0
-  def test_that_it_has_a_version_numbertest_that_it_has_a_version_number4,0
-  def test_it_does_something_usefultest_it_does_something_useful8,0
-
-lib/stimulus_reflex_testing/version.rb,142
-module StimulusReflexTestingStimulusReflexTesting1,0
-  VERSION = "0.1.0"VERSION2,0
-  VERSION = "0.1.0"StimulusReflexTesting::VERSION2,0
-
-lib/stimulus_reflex_testing.rb,168
-module StimulusReflexTestingStimulusReflexTesting5,0
-  class Error < StandardError; endError6,0
-  class Error < StandardError; endStimulusReflexTesting::Error6,0
-
-lib/stimulus_reflex/test_case.rb,409
-class StimulusReflex::TestCase < ActiveSupport::TestCaseTestCase4,0
-class StimulusReflex::TestCase < ActiveSupport::TestCaseStimulusReflex::TestCase4,0
-  class Channel < ActionCable::Channel::TestCaseChannel7,0
-  class Channel < ActionCable::Channel::TestCaseStimulusReflex::TestCase::Channel7,0
-    def initialize(connection_opts = {})initialize10,0
-  def build_reflex(opts = {})build_reflex16,0
-
-lib/stimulus_reflex/reflex.rb,437
-class StimulusReflex::ReflexReflex1,0
-class StimulusReflex::ReflexStimulusReflex::Reflex1,0
-  def get(instance_variable)get2,0
-  def run(method_name, *args)run6,0
-  class ActionDispatch::RequestRequest10,0
-  class ActionDispatch::RequestStimulusReflex::Reflex::ActionDispatch::Request10,0
-    def sessionsession11,0
-  class SessionSession16,0
-  class SessionStimulusReflex::Reflex::Session16,0
-    def load!load!17,0
