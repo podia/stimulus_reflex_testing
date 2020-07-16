@@ -6,6 +6,24 @@ module StimulusReflex::TestReflexPatches
   def run(method_name, *args)
     process(method_name, *args)
   end
+
+  def cable_ready
+    @cable_ready ||= FableReady.new
+  end
+
+  class FableReady
+    def [](key)
+      self
+    end
+
+    def method_missing(*)
+      true || super
+    end
+
+    def respond_to_missing?(*)
+      true
+    end
+  end
 end
 
 StimulusReflex::Reflex.include(StimulusReflex::TestReflexPatches)
