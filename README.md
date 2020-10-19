@@ -110,6 +110,8 @@ class PostReflex < ApplicationReflex
 end
 
 # spec/reflexes/post_reflex_spec.rb
+require 'rails_helper'
+
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
   let(:reflex) { build_reflex(url: edit_post_url(post)) }
