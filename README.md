@@ -21,7 +21,7 @@ Add this line to your application's Gemfile:
 gem 'stimulus_reflex_testing', require: false
 ```
 
-and add the following to `spec/rails_helper.rb`:
+and add the following to `test/test_helper.rb`:
 
 ```ruby
 require 'stimulus_reflex_testing'
