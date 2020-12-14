@@ -21,18 +21,12 @@ Add this line to your application's Gemfile:
 gem 'stimulus_reflex_testing', require: false
 ```
 
-and add the following to `test/test_helper.rb`:
-
-```ruby
-require 'stimulus_reflex_testing'
-```
-
 ### Using 5.2 or below? Or using a version of RSpec Rails lower than 4?
 
 Both Rails 6 and RSpec Rails 4 introduce the `action-cable-testing` library. If you're using Rails 5.2 and a version of RSpec Rails lower than 4, include the `action-cable-testing` gem in your Gemfile.
 
 ```ruby
-gem 'stimulus_reflex_testing'
+gem 'stimulus_reflex_testing', require: false
 gem 'action-cable-testing'
 ```
 
