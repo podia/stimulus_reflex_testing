@@ -18,7 +18,13 @@ Things we'd like to add/improve on:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'stimulus_reflex_testing'
+gem 'stimulus_reflex_testing', require: false
+```
+
+and add the following to `spec/rails_helper.rb`:
+
+```ruby
+require 'stimulus_reflex_testing'
 ```
 
 ### Using 5.2 or below? Or using a version of RSpec Rails lower than 4?
