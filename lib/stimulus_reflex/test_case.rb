@@ -5,9 +5,19 @@ class StimulusReflex::TestCase < ActiveSupport::TestCase
   class TestChannel < ActionCable::Channel::TestCase
     _channel_class = StimulusReflex::Channel
 
+    delegate :env, to: :connection
+
     def initialize(connection_opts = {})
       super("StimulusReflex::Channel")
       @connection = stub_connection(connection_opts.merge(env: {}))
+    end
+
+    def stream_name
+      ids = connection.identifiers.map { |identifier| connection.send(identifier).try(:id) || connection.send(identifier) }
+      [
+        "StimulusReflex::Channel",
+        ids.select(&:present?).join(";")
+      ].select(&:present?).join(":")
     end
   end
 
