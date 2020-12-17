@@ -18,7 +18,7 @@ Things we'd like to add/improve on:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'stimulus_reflex_testing'
+gem 'stimulus_reflex_testing', require: false
 ```
 
 ### Using 5.2 or below? Or using a version of RSpec Rails lower than 4?
@@ -26,7 +26,7 @@ gem 'stimulus_reflex_testing'
 Both Rails 6 and RSpec Rails 4 introduce the `action-cable-testing` library. If you're using Rails 5.2 and a version of RSpec Rails lower than 4, include the `action-cable-testing` gem in your Gemfile.
 
 ```ruby
-gem 'stimulus_reflex_testing'
+gem 'stimulus_reflex_testing', require: false
 gem 'action-cable-testing'
 ```
 
