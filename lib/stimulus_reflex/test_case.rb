@@ -34,7 +34,7 @@ class StimulusReflex::TestCase < ActiveSupport::TestCase
       element = opts.fetch(:element, StimulusReflex::Element.new)
 
       self.class.reflex_class.new(
-        channel, element: element, url: opts.dig(:url), params: opts.fetch(:params, {})
+        channel, element: element, url: opts.dig(:url), method_name: opts.dig(:method_name), params: opts.fetch(:params, {})
       )
     end
   end
