@@ -3,8 +3,6 @@ require "active_support/test_case"
 
 class StimulusReflex::TestCase < ActiveSupport::TestCase
   class TestChannel < ActionCable::Channel::TestCase
-    _channel_class = StimulusReflex::Channel
-
     delegate :env, to: :connection
 
     def initialize(connection_opts = {})
