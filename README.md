@@ -18,7 +18,7 @@ Things we'd like to add/improve on:
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'stimulus_reflex_testing', require: false
+gem 'stimulus_reflex_testing'
 ```
 
 ### Using 5.2 or below? Or using a version of RSpec Rails lower than 4?
@@ -26,7 +26,7 @@ gem 'stimulus_reflex_testing', require: false
 Both Rails 6 and RSpec Rails 4 introduce the `action-cable-testing` library. If you're using Rails 5.2 and a version of RSpec Rails lower than 4, include the `action-cable-testing` gem in your Gemfile.
 
 ```ruby
-gem 'stimulus_reflex_testing', require: false
+gem 'stimulus_reflex_testing'
 gem 'action-cable-testing'
 ```
 
@@ -35,12 +35,6 @@ And then execute:
     $ bundle install
 
 ### RSpec instructions
-
-Require the library into your `rails_helper`:
-
-```ruby
-require 'stimulus_reflex_testing/rspec'
-```
 
 Rspec tests include the reflex testing functionality when `type: :reflex` is provided. If this type is not provided, your Reflex tests won't work.
 
@@ -98,6 +92,75 @@ reflex.run(:find_post)
 reflex.get(:post) #=> returns the @post instance variable
 ```
 
+## Matchers
+
+### `morph(selector)`
+
+You can assert that a "run" reflex morphed as you expected:
+
+```ruby
+# app/reflexes/post_reflex.rb
+class PostReflex < ApplicationReflex
+  def delete
+    @post = Post.find(params[:id])
+    @post.destroy
+    morph dom_id(@post), ""
+  end
+end
+
+# spec/reflexes/post_reflex_spec.rb
+require 'rails_helper'
+
+RSpec.describe PostReflex, type: :reflex do
+  let(:post) { create(:post) }
+  let(:reflex) { build_reflex }
+
+  describe '#delete' do
+    it 'morphs the post' do
+      subject = reflex.run(:delete)
+      expect(subject).to morph("#post_#{post.id}")
+    end
+  end
+end
+```
+
+You can also assert the content you provided to morph:
+
+```ruby
+# spec/reflexes/post_reflex_spec.rb
+require 'rails_helper'
+
+RSpec.describe PostReflex, type: :reflex do
+  let(:post) { create(:post) }
+  let(:reflex) { build_reflex }
+
+  describe '#delete' do
+    it 'morphs the post with an empty string' do
+      subject = reflex.run(:delete)
+      expect(subject).to morph("#post_#{post.id}").with("")
+    end
+  end
+end
+```
+
+You can also run the expecation as a block:
+
+```ruby
+# spec/reflexes/post_reflex_spec.rb
+require 'rails_helper'
+
+RSpec.describe PostReflex, type: :reflex do
+  let(:post) { create(:post) }
+  let(:reflex) { build_reflex }
+
+  describe '#delete' do
+    it 'morphs the post with an empty string' do
+      expect { reflex.run(:delete) }.to morph("#post_#{post.id}").with("")
+    end
+  end
+end
+```
+
 ## RSpec example
 
 ```ruby
@@ -124,11 +187,11 @@ RSpec.describe PostReflex, type: :reflex do
       subject
     end
 
-    it 'should find the post' do
+    it 'finds the post' do
       expect(reflex.get(:post)).to eq(post)
     end
 
-    it 'should validate the post' do
+    it 'validates the post' do
       expect(reflex.get(:post).errors).to be_present
     end
   end
