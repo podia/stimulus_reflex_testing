@@ -12,6 +12,10 @@ end
 
 RSpec::Matchers.define :morph do |selector|
   match do |morphs|
+    if morphs.is_a?(StimulusReflex::NothingBroadcaster)
+      return selector.to_s == "nothing"
+    end
+
     morph = matching_morph(morphs, selector)
 
     if morph.present? && @with_chain_called
