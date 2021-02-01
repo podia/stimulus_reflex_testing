@@ -12,8 +12,6 @@ Gem::Specification.new do |spec|
   spec.license = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 2.3.0")
 
-  spec.metadata["allowed_push_host"] = "Set to 'http://mygemserver.com'"
-
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
   # spec.metadata["changelog_uri"] = "Put your gem's CHANGELOG.md URL here."
@@ -26,6 +24,6 @@ Gem::Specification.new do |spec|
   spec.bindir = "exe"
   spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
-  
-  spec.add_dependency "stimulus_reflex"
+
+  spec.add_dependency "stimulus_reflex", ">= 3.3.0"
 end
