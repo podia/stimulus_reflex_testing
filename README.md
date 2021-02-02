@@ -161,6 +161,39 @@ RSpec.describe PostReflex, type: :reflex do
 end
 ```
 
+### `broadcast(operations)` (Experimental)
+
+You can assert that a reflex will perform the CableReady operations you anticipate:
+
+```ruby
+# app/reflexes/post_reflex.rb
+class PostReflex < ApplicationReflex
+  def delete
+    @post = Post.find(params[:id])
+    @post.destroy
+    cable_ready[PostsChannel].remove(selector: dom_id(@post)).broadcast
+  end
+end
+
+# spec/reflexes/post_reflex_spec.rb
+require 'rails_helper'
+
+RSpec.describe PostReflex, type: :reflex do
+  let(:post) { create(:post) }
+  let(:reflex) { build_reflex }
+
+  describe '#delete' do
+    it 'broadcasts the CableReady operations' do
+      expect { reflex.run(:delete) }.to broadcast(:remove, :broadcast)
+    end
+
+    it 'removes the post' do
+      expect { reflex.run(:delete) }.to broadcast(remove: { selector: "#post_#{post.id}" }, broadcast: nil)
+    end
+  end
+end
+```
+
 ## RSpec example
 
 ```ruby

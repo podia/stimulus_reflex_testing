@@ -10,14 +10,24 @@ RSpec::Matchers.define :have_set do |instance_variable, expected_value|
   end
 end
 
-RSpec::Matchers.define :broadcast do |*broadcasts|
+RSpec::Matchers.define :broadcast do |**broadcasts|
   match do |block|
     fable_ready = StimulusReflex::TestReflexPatches::FableReady.new
 
-    allow_any_instance_of(StimulusReflex::CableReadyChannels).to receive(:[]).and_return(fable_ready)
+    allow_any_instance_of(StimulusReflex::CableReadyChannels).to(
+      receive(:[]).and_return(fable_ready)
+    )
 
     broadcasts.each do |broadcast|
-      expect(fable_ready).to receive(broadcast).and_return(fable_ready)
+      if broadcast.is_a?(Array)
+        if broadcast[1].present?
+          expect(fable_ready).to receive(broadcast[0]).with(broadcast[1]).and_return(fable_ready)
+        else
+          expect(fable_ready).to receive(broadcast[0]).and_return(fable_ready)
+        end
+      else
+        expect(fable_ready).to receive(broadcast).and_return(fable_ready)
+      end
     end
 
     block.call
