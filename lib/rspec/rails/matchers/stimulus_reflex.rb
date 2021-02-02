@@ -10,6 +10,26 @@ RSpec::Matchers.define :have_set do |instance_variable, expected_value|
   end
 end
 
+RSpec::Matchers.define :broadcast do |*broadcasts|
+  match do |block|
+    fable_ready = StimulusReflex::TestReflexPatches::FableReady.new
+
+    allow_any_instance_of(StimulusReflex::CableReadyChannels).to receive(:[]).and_return(fable_ready)
+
+    broadcasts.each do |broadcast|
+      expect(fable_ready).to receive(broadcast).and_return(fable_ready)
+    end
+
+    block.call
+
+    RSpec::Mocks.verify
+  end
+
+  def supports_block_expectations?
+    true
+  end
+end
+
 RSpec::Matchers.define :morph do |selector|
   match do |morphs|
     if morphs.is_a?(StimulusReflex::NothingBroadcaster)
