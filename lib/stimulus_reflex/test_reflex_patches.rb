@@ -17,7 +17,7 @@ module StimulusReflex::TestReflexPatches
     end
 
     def method_missing(*)
-      true || super
+      self
     end
 
     def respond_to_missing?(*)
