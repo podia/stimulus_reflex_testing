@@ -1,5 +1,7 @@
 # StimulusReflex Testing
 
+`<cough>`Come [work with us](https://podia.com/jobs).`</cough>`
+
 So, you've started using the magic that is StimulusReflex. Neat, us too!
 
 At this time, there aren't official testing helpers in the StimulusReflex library. We wanted to unit-test our reflexes, so we thought we share what we've been working on.
