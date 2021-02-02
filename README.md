@@ -36,6 +36,8 @@ And then execute:
 
 ### RSpec instructions
 
+In `spec/rails_helper.rb` make sure to add: `require "stimulus_reflex_testing/rspec"`
+
 Rspec tests include the reflex testing functionality when `type: :reflex` is provided. If this type is not provided, your Reflex tests won't work.
 
 ## Usage
