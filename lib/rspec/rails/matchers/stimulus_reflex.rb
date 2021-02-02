@@ -55,4 +55,6 @@ RSpec::Matchers.define :morph do |selector|
       morphs.find { |morph| morph[0] == selector }
     end
   end
+
+  diffable
 end
