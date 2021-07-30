@@ -3,8 +3,14 @@ module StimulusReflex::TestReflexPatches
     instance_variable_get("@#{instance_variable}")
   end
 
-  def run(method_name, *args)
-    process(method_name, *args)
+  def run(reflex_method = nil, *args)
+    reflex_to_run = reflex_method || method_name
+
+    if reflex_to_run
+      process(reflex_to_run, *args)
+    else
+      raise "You must provide the method you want to run for #{self.class.name}"
+    end
   end
 
   def cable_ready
