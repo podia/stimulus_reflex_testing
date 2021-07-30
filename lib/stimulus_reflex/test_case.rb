@@ -22,11 +22,6 @@ class StimulusReflex::TestCase < ActiveSupport::TestCase
   module Behavior
     extend ActiveSupport::Concern
 
-    module ClassMethods
-      def reflex_class
-      end
-    end
-
     def build_reflex(opts = {})
       channel = opts.fetch(:channel, TestChannel.new(opts.fetch(:connection, {})))
       element = opts.fetch(:element, StimulusReflex::Element.new)
