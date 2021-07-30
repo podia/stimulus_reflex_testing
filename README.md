@@ -48,18 +48,20 @@ Rspec tests include the reflex testing functionality when `type: :reflex` is pro
 
 To build an instance of your reflex with the required setup handled (channel, url, element, etc) you can use the `build_reflex` method.
 
+**Note:** In previous versions of the library you didn't have to provide the action you want to test in `build_reflex`. You would build the reflex and then provide the action to the `run` method. Now, the "proper" way to do this is to pass the action as `method_name` to `build_reflex`.
+
 ```ruby
 # With a valid URL so StimulusReflex can build the correct request
-build_reflex(url: posts_url)
+build_reflex(method_name: :create, url: posts_url)
 
 # Does your test rely on a `current_user` (or similar) defined in `ApplicationCable::Connection`?
-build_reflex(url: posts_url, connection: { current_user: create(:user) })
+build_reflex(method_name: :create, url: posts_url, connection: { current_user: create(:user) })
 
 # Do you rely on form params?
-build_reflex(url: edit_post_url(post), params: { post: { title: 'A new title!' } })
+build_reflex(method_name: :create, url: edit_post_url(post), params: { post: { title: 'A new title!' } })
 
 # Need to give your element some data?
-reflex = build_reflex(url: posts_url)
+reflex = build_reflex(method_name: :create, url: posts_url)
 reflex.element.value = "Hello"
 reflex.element.dataset.id = "123"
 ```
@@ -68,10 +70,25 @@ reflex.element.dataset.id = "123"
 
 To unit test a reflex, we provide a method (when using `build_reflex`) called `#run`. This method takes a method name, and any arguments.
 
+**Note:** The method name is now optional if you provide the action to `build_reflex`, which is now the "correct" way setup your reflex test.
+
 ```ruby
+# Providing the action during setup
+reflex = build_reflex(method_name: :create, url: posts_url)
+reflex.run
+
+# Providing the action during setup with arguments
+reflex = build_reflex(method_name: :create, url: posts_url)
+reflex.run(nil, arg1, arg2)
+
+# Legacy: Providing the action at "runtime" with arguments
 reflex = build_reflex(url: posts_url)
-reflex.run(:method, arg1, arg2)
+reflex.run(:create, arg1, arg2)
 ```
+
+**Why does the action need to be in `build_reflex` now?**
+
+If we wait don't provide the Reflex action until after we've built the reflex, the callbacks do not setup correctly. If you're using callbacks (especially with :only or :except) you may run into issues if you don't provide the action until calling `#run`.
 
 **Why can't I just call the method directly?**
 
@@ -91,8 +108,8 @@ class PostReflex < ApplicationReflex
   end
 end
 
-reflex = build_reflex(url: edit_post_url(post), params: { id: post.id })
-reflex.run(:find_post)
+reflex = build_reflex(method_name: :find_post, url: edit_post_url(post), params: { id: post.id })
+reflex.run
 reflex.get(:post) #=> returns the @post instance variable
 ```
 
@@ -117,11 +134,11 @@ require 'rails_helper'
 
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
-  let(:reflex) { build_reflex }
+  let(:reflex) { build_reflex(method_name: :delete) }
 
   describe '#delete' do
     it 'morphs the post' do
-      subject = reflex.run(:delete)
+      subject = reflex.run
       expect(subject).to morph("#post_#{post.id}")
     end
   end
@@ -136,11 +153,11 @@ require 'rails_helper'
 
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
-  let(:reflex) { build_reflex }
+  let(:reflex) { build_reflex(method_name: :delete) }
 
   describe '#delete' do
     it 'morphs the post with an empty string' do
-      subject = reflex.run(:delete)
+      subject = reflex.run
       expect(subject).to morph("#post_#{post.id}").with("")
     end
   end
@@ -155,11 +172,11 @@ require 'rails_helper'
 
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
-  let(:reflex) { build_reflex }
+  let(:reflex) { build_reflex(method_name: :delete) }
 
   describe '#delete' do
     it 'morphs the post with an empty string' do
-      expect { reflex.run(:delete) }.to morph("#post_#{post.id}").with("")
+      expect { reflex.run }.to morph("#post_#{post.id}").with("")
     end
   end
 end
@@ -184,15 +201,15 @@ require 'rails_helper'
 
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
-  let(:reflex) { build_reflex }
+  let(:reflex) { build_reflex(method_name: :delete) }
 
   describe '#delete' do
     it 'broadcasts the CableReady operations' do
-      expect { reflex.run(:delete) }.to broadcast(:remove, :broadcast)
+      expect { reflex }.to broadcast(:remove, :broadcast)
     end
 
     it 'removes the post' do
-      expect { reflex.run(:delete) }.to broadcast(remove: { selector: "#post_#{post.id}" }, broadcast: nil)
+      expect { reflex }.to broadcast(remove: { selector: "#post_#{post.id}" }, broadcast: nil)
     end
   end
 end
@@ -214,10 +231,10 @@ require 'rails_helper'
 
 RSpec.describe PostReflex, type: :reflex do
   let(:post) { create(:post) }
-  let(:reflex) { build_reflex(url: edit_post_url(post)) }
+  let(:reflex) { build_reflex(method_name: :validate, url: edit_post_url(post)) }
 
   describe '#validate' do
-    subject { reflex.run(:validate) }
+    subject { reflex.run }
 
     before do
       reflex.element.dataset.post_id = post.id
