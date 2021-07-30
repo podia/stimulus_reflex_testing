@@ -13,9 +13,9 @@ module StimulusReflex::TestReflexPatches
     end
   end
 
-  # def cable_ready
-  #   @cable_ready ||= FableReady.new
-  # end
+  def cable_ready
+    @cable_ready ||= FableReady.new
+  end
 
   class FableReady
     def [](key)
