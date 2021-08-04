@@ -1,5 +1,6 @@
 require "rspec/rails/example/reflex_example_group"
 require "rspec/rails/matchers/stimulus_reflex"
+require "stimulus_reflex_testing/session"
 
 RSpec.configure do |config|
   if defined?(StimulusReflex)
@@ -8,7 +9,7 @@ RSpec.configure do |config|
 
     config.before type: :reflex do
       allow_any_instance_of(ActionDispatch::Request).to(
-        receive(:session).and_return(double(:session, load!: true))
+        receive(:session).and_return(StimulusReflexTesting::Session.new)
       )
     end
   end
