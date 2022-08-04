@@ -22,13 +22,20 @@ class StimulusReflex::TestCase < ActiveSupport::TestCase
   module Behavior
     extend ActiveSupport::Concern
 
-    def build_reflex(opts = {})
+    def build_reflex(opts = {}, stimulus_reflex_version = StimulusReflex::VERSION)
       channel = opts.fetch(:channel, TestChannel.new(opts.fetch(:connection, {})))
       element = opts.fetch(:element, StimulusReflex::Element.new)
+      version = stimulus_reflex_version
 
-      self.class.reflex_class.new(
-        channel, element: element, url: opts.fetch(:url, ""), method_name: method_name_from_opts(opts), params: opts.fetch(:params, {})
-      )
+      args_350_pre8 = { element: element, url: opts.fetch(:url, ""), method_name: method_name_from_opts(opts),
+                        params: opts.fetch(:params, {}), client_attributes: {} }
+      args_350_pre9 = { **args_350_pre8, client_attributes: { version: version } }
+
+      if Gem::Version.new(version) > Gem::Version.new('3.5.0pre8')
+        self.class.reflex_class.new(channel, args_350_pre9)
+      else
+        self.class.reflex_class.new(channel, args_350_pre8)
+      end
     end
 
     private
