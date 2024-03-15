@@ -31,7 +31,10 @@ class StimulusReflex::TestCase < ActiveSupport::TestCase
                         params: opts.fetch(:params, {}), client_attributes: {} }
       args_350_pre9 = { **args_350_pre8, client_attributes: { version: version } }
 
-      if Gem::Version.new(version) > Gem::Version.new('3.5.0pre8')
+      if Gem::Version.new(version) >= Gem::Version.new('3.5.0.rc4')
+        args_350_rc4 = { reflex_data: StimulusReflex::ReflexData.new({ **args_350_pre8, version: version }) }
+        self.class.reflex_class.new(channel, **args_350_rc4)
+      elsif Gem::Version.new(version) > Gem::Version.new('3.5.0pre8')
         self.class.reflex_class.new(channel, **args_350_pre9)
       else
         self.class.reflex_class.new(channel, **args_350_pre8)
