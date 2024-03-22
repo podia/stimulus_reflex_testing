@@ -1,19 +1,8 @@
 # StimulusReflex Testing
 
-`<cough>`Come [work with us](https://podia.com/jobs).`</cough>`
+🚨🚨🚨🚨🚨🚨 **We are no longer maintining this gem.** 🚨🚨🚨🚨🚨🚨
 
-So, you've started using the magic that is StimulusReflex. Neat, us too!
-
-At this time, there aren't official testing helpers in the StimulusReflex library. We wanted to unit-test our reflexes, so we thought we share what we've been working on.
-
-Things we'd like to add/improve on:
-
-- MiniTest support
-- Integration style testing?
-- The ability to run assertions/expectations against the HTML re-rendered by a reflex
-  - `expect(subject.to_html).to include('Hi, I rendered from a Reflex!')`
-- Session is stubbed out (Rspec) right now, but we'd love to find a way to support sessions in testing
-- Things you find useful that we can't think of, yet
+If you're interested in taking ownership of this project, please reach out. Otherwise we'll likely archive it soon.
 
 ## Installation
 
